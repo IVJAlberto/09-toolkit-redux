@@ -1,8 +1,18 @@
-import { useGetTodosQuery } from "./store/apis/todosApi"
+import { useState } from "react";
+import { useGetTodosQuery, useGetTodoQuery } from "./store/apis/todosApi"
 
 export const TodoApp = () => {
 
-    const { data: todos = [], isLoading } = useGetTodosQuery();
+    const [todoID, setTodoID] = useState(1)
+    const { data: todo, isLoading } = useGetTodoQuery( todoID );
+
+    const nextTodo = () => {
+        setTodoID( todoID + 1);
+    }
+    const prevTodo = () => {
+        if( todoID === 1 ) return;
+        setTodoID( todoID - 1);
+    }
 
   return (
     <>
@@ -10,23 +20,27 @@ export const TodoApp = () => {
         <hr />
         <h4>isLoading: { isLoading ? 'True' : 'False' }</h4>
 
-        <pre>...</pre>
+        <pre>{ JSON.stringify(todo)}</pre>
+        <button onClick={ nextTodo }
+        >
+            Prev Todo
 
-        <ul>
+        </button>
+        <button onClick={ prevTodo }
+        >
+            Next Todo
+
+        </button>
+
+        {/* <ul>
             { todos.map( todo => (
                 <li key={ todo.id }>
                     <strong> { todo.completed ? 'Done' : 'Pending' } </strong>
                     { todo.title}
                 </li>
             )) }
-        </ul>
+        </ul> */}
 
-        <button
-        
-        >
-            Next Todo
-
-        </button>
     </>
   )
 }
